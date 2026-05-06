@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lingua - Conversation Mode</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    .conversation-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 24px;
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .chat-area {
+      flex: 1;
+      display: flex;
+      gap: 24px;
+      min-height: 0;
+    }
+
+    .chat-side {
+      flex: 1;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .chat-side-blue { border-top: 4px solid #3B82F6; }
+    .chat-side-green { border-top: 4px solid #10B981; }
+
+    .chat-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0,0,0,0.02);
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: var(--radius-lg);
+      font-size: 1.05rem;
+      line-height: 1.5;
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    .msg-mine {
+      align-self: flex-end;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg-theirs {
+      align-self: flex-start;
+      background: rgba(124, 58, 237, 0.1);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-bottom-left-radius: 4px;
+      color: var(--primary-light);
+    }
+
+    .chat-input-area {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-secondary);
+    }
+
+    .chat-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 768px) {
+      .chat-area {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-brand">
+          <div class="sidebar-brand-icon"><i class="ph-bold ph-translate"></i></div>
+          Lingua
+        </a>
+      </div>
+      <div class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-translate"></i> Translator</a>
+        <button class="nav-item active"><i class="ph-duotone ph-users-three"></i> Conversation Mode <span class="badge badge-primary">New</span></button>
+        <button class="nav-item"><i class="ph-duotone ph-book-open-text"></i> My Vocabulary</button>
+        <button class="nav-item"><i class="ph-duotone ph-clock-counter-clockwise"></i> History</button>
+      </div>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar" id="user-avatar"><i class="ph-bold ph-user"></i></div>
+          <div class="user-info">
+            <div class="user-name" id="user-name">User</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted)">Free Plan</div>
+          </div>
+          <button class="user-logout" id="logout-btn" title="Sign out"><i class="ph-bold ph-sign-out"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle"><i class="ph-bold ph-list"></i></button>
+          <div style="font-weight: 600;">Conversation Mode</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn-icon" id="theme-toggle" title="Toggle Theme"><i class="ph-bold ph-moon-stars"></i></button>
+        </div>
+      </header>
+
+      <!-- Translation Container -->
+      <div class="conversation-container">
+        
+        <div class="chat-area">
+          
+          <!-- Person 1 (Left) -->
+          <div class="chat-side chat-side-blue">
+            <div class="chat-header">
+              <select class="lang-selector" id="p1-lang" style="width:auto; padding: 4px 30px 4px 8px; border:none; background:transparent; font-weight:600;">
+                <option value="en">English (Person 1)</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="hi">Hindi</option>
+              </select>
+              <button class="btn-icon btn-sm" id="p1-mic" title="Speak"><i class="ph-bold ph-microphone"></i></button>
+            </div>
+            <div class="chat-messages" id="p1-chat">
+              <!-- Messages -->
+            </div>
+            <div class="chat-input-area">
+              <input type="text" id="p1-input" class="chat-input" placeholder="Type a message...">
+              <button class="btn btn-primary btn-sm" id="p1-send"><i class="ph-bold ph-paper-plane-right"></i> Send</button>
+            </div>
+          </div>
+
+          <!-- Person 2 (Right) -->
+          <div class="chat-side chat-side-green">
+            <div class="chat-header">
+              <select class="lang-selector" id="p2-lang" style="width:auto; padding: 4px 30px 4px 8px; border:none; background:transparent; font-weight:600;">
+                <option value="es">Spanish (Person 2)</option>
+                <option value="en">English</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="hi">Hindi</option>
+              </select>
+              <button class="btn-icon btn-sm" id="p2-mic" title="Speak"><i class="ph-bold ph-microphone"></i></button>
+            </div>
+            <div class="chat-messages" id="p2-chat">
+              <!-- Messages -->
+            </div>
+            <div class="chat-input-area">
+              <input type="text" id="p2-input" class="chat-input" placeholder="Type a message...">
+              <button class="btn btn-primary btn-sm" id="p2-send" style="background:var(--success);"><i class="ph-bold ph-paper-plane-right"></i> Send</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/voice.js"></script>
+  <script src="js/conversation.js"></script>
+</body>
+</html>

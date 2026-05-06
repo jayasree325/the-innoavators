@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lingua - Dashboard</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+
+  <!-- API Key Setup Overlay (Shown if key is missing) -->
+  <div class="modal-overlay" id="api-key-overlay" style="display: none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 style="font-family: var(--font-display);"><i class="ph-duotone ph-key"
+            style="color:var(--primary-light);"></i> Welcome to Lingua</h3>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">To power the AI translation features, Lingua uses
+          the <strong>Gemini API</strong> directly from your browser. Your key is saved locally and never sent to our
+          servers.</p>
+        <div class="form-group">
+          <label class="form-label">Gemini API Key</label>
+          <div class="input-wrapper">
+            <i class="ph-bold ph-key input-icon"></i>
+            <input type="password" id="api-key-input" placeholder="AIzaSy..." class="api-key-input">
+          </div>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" class="api-key-link">Get a free API key here
+            &rarr;</a>
+        </div>
+        <button class="btn btn-primary" id="save-key-btn" style="width: 100%;">Save Key & Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-brand">
+          <div class="sidebar-brand-icon"><i class="ph-bold ph-translate"></i></div>
+          Lingua
+        </a>
+      </div>
+      <div class="sidebar-nav">
+        <button class="nav-item active"><i class="ph-duotone ph-translate"></i> Translator</button>
+        <a href="conversation.html" class="nav-item" style="text-decoration:none;"><i
+            class="ph-duotone ph-users-three"></i> Conversation Mode <span class="badge badge-primary">New</span></a>
+        <button class="nav-item"><i class="ph-duotone ph-book-open-text"></i> My Vocabulary</button>
+        <button class="nav-item"><i class="ph-duotone ph-clock-counter-clockwise"></i> History</button>
+      </div>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar" id="user-avatar"><i class="ph-bold ph-user"></i></div>
+          <div class="user-info">
+            <div class="user-name" id="user-name">User</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted)">Free Plan</div>
+          </div>
+          <button class="user-logout" id="logout-btn" title="Sign out"><i class="ph-bold ph-sign-out"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle"><i class="ph-bold ph-list"></i></button>
+          <div style="font-weight: 600;">Neural Translation</div>
+        </div>
+        <div class="topbar-actions">
+          <select id="tone-select" class="btn btn-secondary btn-sm" style="width: auto; padding-right: 32px;">
+            <option value="neutral">Neutral Tone</option>
+            <option value="casual">Casual & Friendly</option>
+            <option value="professional">Professional</option>
+            <option value="formal">Formal</option>
+          </select>
+          <button class="btn-icon" id="theme-toggle" title="Toggle Theme"><i class="ph-bold ph-moon-stars"></i></button>
+        </div>
+      </header>
+
+      <!-- Translation Container -->
+      <div class="translation-container">
+
+        <!-- Controls -->
+        <div class="controls-row glass">
+          <select class="lang-selector" id="source-lang">
+            <option value="auto">Detect Language</option>
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="it">Italian</option>
+            <option value="ja">Japanese</option>
+            <option value="ko">Korean</option>
+            <option value="zh">Chinese</option>
+            <option value="hi">Hindi</option>
+          </select>
+
+          <button class="swap-btn" id="swap-btn"><i class="ph-bold ph-arrows-left-right"></i></button>
+
+          <select class="lang-selector" id="target-lang">
+            <option value="es">Spanish</option>
+            <option value="en">English</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="it">Italian</option>
+            <option value="ja">Japanese</option>
+            <option value="ko">Korean</option>
+            <option value="zh">Chinese</option>
+            <option value="hi">Hindi</option>
+          </select>
+        </div>
+
+        <!-- Panels Grid -->
+        <div class="panels-grid">
+
+          <!-- Source Panel -->
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Source Text</span>
+              <div class="panel-actions">
+                <button class="btn-icon btn-sm" title="Clear"><i class="ph-bold ph-x"></i></button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <textarea class="text-input" id="source-text" placeholder="Type, paste, or speak text here..."></textarea>
+            </div>
+            <div class="panel-footer">
+              <div class="char-count">0 / 5000</div>
+              <div style="display:flex; gap: 12px; align-items:center;">
+                <button class="voice-btn" id="voice-input-btn" title="Speak"><i
+                    class="ph-fill ph-microphone"></i></button>
+                <button class="btn btn-primary" id="translate-btn">Translate ✨</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Target Panel -->
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Translation</span>
+              <div class="panel-actions">
+                <span class="badge" id="emotion-badge" style="display:none; margin-right: 8px;"></span>
+                <button class="btn-icon btn-sm" id="speak-btn" title="Listen"><i
+                    class="ph-bold ph-speaker-high"></i></button>
+                <button class="btn-icon btn-sm" id="copy-btn" title="Copy"><i class="ph-bold ph-copy"></i></button>
+                <button class="btn-icon btn-sm" title="Share"><i class="ph-bold ph-share-network"></i></button>
+              </div>
+            </div>
+            <div class="panel-body" style="background: rgba(124,58,237,0.02);">
+              <div class="text-output" id="target-text">
+                <span class="output-placeholder">Translation will appear here...</span>
+              </div>
+              <div class="explanation-box" id="explanation-box"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/voice.js"></script>
+  <script src="js/translator.js"></script>
+</body>
+
+</html>

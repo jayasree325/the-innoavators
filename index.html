@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lingua - AI Language Translator</title>
+  <meta name="description" content="Production-level AI Language Translator Web App using Gemini API">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="landing-nav" id="nav">
+    <div class="nav-logo">
+      <div class="logo-icon"><i class="ph-bold ph-translate"></i></div>
+      Lingua
+    </div>
+    <div class="nav-links">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#how-it-works" class="nav-link">How it Works</a>
+      <a href="login.html" class="nav-link">Sign In</a>
+      <a href="login.html" class="btn btn-primary btn-sm">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="hero-bg">
+      <div class="hero-bg-gradient"></div>
+      <div class="hero-grid"></div>
+    </div>
+    
+    <div class="hero-bubbles">
+      <div class="bubble">Hola 👋</div>
+      <div class="bubble">Bonjour 🥐</div>
+      <div class="bubble">こんにちは 🌸</div>
+      <div class="bubble">Ciao 🍕</div>
+      <div class="bubble">안녕하세요 ✨</div>
+      <div class="bubble">Hallo 🥨</div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span> Powered by Gemini 2.0 AI
+      </div>
+      <h1 class="hero-title">Speak <span class="text-gradient">Any Language</span><br>Like a Local.</h1>
+      <p class="hero-subtitle">Experience context-aware, emotion-detecting translations in real-time. More than just translation—it's genuine understanding.</p>
+      
+      <div class="hero-cta">
+        <a href="login.html" class="btn btn-primary btn-lg">Start Translating Free <i class="ph-bold ph-arrow-right"></i></a>
+        <a href="#demo" class="btn btn-secondary btn-lg"><i class="ph-bold ph-play-circle"></i> See Demo</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-value">50+</div>
+          <div class="stat-label">Languages</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value"><0.5s</div>
+          <div class="stat-label">Response Time</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">AI</div>
+          <div class="stat-label">Context Engine</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="section-header">
+      <span class="section-tag">Powerful Features</span>
+      <h2 class="section-title">Beyond Simple Word Matching</h2>
+      <p class="section-desc">Lingua uses advanced AI to understand nuance, tone, and context, providing translations that actually sound human.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ph-duotone ph-brain"></i></div>
+        <h3 class="feature-title">Context-Aware Tone</h3>
+        <p class="feature-desc">Switch seamlessly between formal, casual, or professional tones. The AI adapts your message automatically.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ph-duotone ph-microphone-stage"></i></div>
+        <h3 class="feature-title">Real-Time Voice</h3>
+        <p class="feature-desc">Speak naturally. Our engine converts speech to text, translates it, and speaks it back in the target language.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ph-duotone ph-smiley-wink"></i></div>
+        <h3 class="feature-title">Emotion Detection</h3>
+        <p class="feature-desc">The AI detects sentiment and adds context to translations so meaning is never lost in text.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ph-duotone ph-book-open-text"></i></div>
+        <h3 class="feature-title">Smart Learning</h3>
+        <p class="feature-desc">Highlight difficult words to see detailed meanings, synonyms, and examples. Save them to your vocabulary.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ph-duotone ph-users-three"></i></div>
+        <h3 class="feature-title">Conversation Mode</h3>
+        <p class="feature-desc">Split-screen interface designed for two people speaking different languages in person.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="ph-duotone ph-moon-stars"></i></div>
+        <h3 class="feature-title">Beautiful UI</h3>
+        <p class="feature-desc">Glassmorphism design, dark/light modes, and smooth animations make translating a joy.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-card">
+      <h2>Ready to bridge the language gap?</h2>
+      <p style="color: var(--text-secondary); margin: 16px 0 32px;">Join thousands of users who are communicating better worldwide.</p>
+      <a href="login.html" class="btn btn-primary btn-lg">Launch Web App</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="nav-logo">
+      <div class="logo-icon" style="width:24px; height:24px; font-size:.8rem"><i class="ph-bold ph-translate"></i></div>
+      Lingua
+    </div>
+    <div class="footer-links">
+      <a href="#" class="footer-link">Privacy</a>
+      <a href="#" class="footer-link">Terms</a>
+      <a href="#" class="footer-link">Contact</a>
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+    });
+  </script>
+</body>
+</html>

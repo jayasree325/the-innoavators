@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lingua - Login</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+  <div class="login-page">
+    <div class="login-bg">
+      <div class="login-bg-grid"></div>
+    </div>
+
+    <div class="login-left">
+      <div class="login-left-content">
+        <a href="index.html" class="login-brand">
+          <div class="login-brand-icon"><i class="ph-bold ph-translate"></i></div>
+          <span class="login-brand-name">Lingua</span>
+        </a>
+        
+        <h1 class="login-tagline">Understand the<br>world around you.</h1>
+        <p class="login-desc">Sign in to save your vocabulary, view translation history, and access context-aware AI tools.</p>
+        
+        <div class="login-features">
+          <div class="login-feature">
+            <div class="login-feature-icon"><i class="ph-duotone ph-check-circle"></i></div>
+            Sync translation history locally
+          </div>
+          <div class="login-feature">
+            <div class="login-feature-icon"><i class="ph-duotone ph-check-circle"></i></div>
+            Build your smart vocabulary
+          </div>
+          <div class="login-feature">
+            <div class="login-feature-icon"><i class="ph-duotone ph-check-circle"></i></div>
+            Unlock conversation mode
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-right">
+      <div class="auth-card">
+        <div class="auth-card-header">
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="tab-login">Sign In</button>
+            <button class="auth-tab" id="tab-register">Create Account</button>
+          </div>
+          <h2 class="auth-title">Welcome back</h2>
+          <p class="auth-subtitle">Enter your details to access your workspace.</p>
+        </div>
+
+        <div class="demo-creds">
+          <i class="ph-duotone ph-info"></i> <strong>Demo Mode:</strong> No backend required! Just enter any email and password to continue.
+        </div>
+
+        <form id="auth-form">
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <div class="input-wrapper">
+              <i class="ph-bold ph-envelope-simple input-icon"></i>
+              <input type="email" id="email" placeholder="you@example.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-wrapper">
+              <i class="ph-bold ph-lock-key input-icon"></i>
+              <input type="password" id="password" placeholder="••••••••" required>
+              <button type="button" class="input-toggle" id="toggle-pwd"><i class="ph-bold ph-eye"></i></button>
+            </div>
+          </div>
+
+          <div class="remember-row">
+            <label class="checkbox-label">
+              <input type="checkbox" checked>
+              Remember me
+            </label>
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In <i class="ph-bold ph-arrow-right"></i></button>
+        </form>
+
+        <div class="auth-footer">
+          By signing in, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    document.getElementById('auth-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const pwd = document.getElementById('password').value;
+      if (email && pwd) {
+        Auth.login(email, pwd);
+        window.location.href = 'dashboard.html';
+      }
+    });
+
+    const togglePwd = document.getElementById('toggle-pwd');
+    const pwdInput = document.getElementById('password');
+    togglePwd.addEventListener('click', () => {
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        togglePwd.innerHTML = '<i class="ph-bold ph-eye-slash"></i>';
+      } else {
+        pwdInput.type = 'password';
+        togglePwd.innerHTML = '<i class="ph-bold ph-eye"></i>';
+      }
+    });
+
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+    const authTitle = document.querySelector('.auth-title');
+    const authBtn = document.querySelector('button[type="submit"]');
+
+    tabRegister.addEventListener('click', () => {
+      tabRegister.classList.add('active');
+      tabLogin.classList.remove('active');
+      authTitle.textContent = 'Create an account';
+      authBtn.innerHTML = 'Sign Up <i class="ph-bold ph-arrow-right"></i>';
+    });
+
+    tabLogin.addEventListener('click', () => {
+      tabLogin.classList.add('active');
+      tabRegister.classList.remove('active');
+      authTitle.textContent = 'Welcome back';
+      authBtn.innerHTML = 'Sign In <i class="ph-bold ph-arrow-right"></i>';
+    });
+  </script>
+</body>
+</html>
