@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lingua - My Vocabulary</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/global.css?v=5">
+  <link rel="stylesheet" href="css/dashboard.css?v=5">
+  <style>
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    
+    .vocab-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      position: relative;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .vocab-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    
+    .vocab-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .vocab-source {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    .vocab-target {
+      font-size: 1rem;
+      color: var(--primary-light);
+      margin-bottom: 8px;
+    }
+
+    .vocab-pronunciation {
+      font-size: .85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    
+    .vocab-lang {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.05);
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+    
+    .delete-btn {
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    
+    .delete-btn:hover {
+      color: var(--error);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* Modal styles */
+    .ai-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .ai-modal-content {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      width: 90%;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .ai-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+
+    .mnemonic-box {
+      background: rgba(124, 58, 237, 0.1);
+      border-left: 4px solid var(--primary);
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      font-style: italic;
+    }
+
+    .example-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .example-item {
+      background: var(--bg-secondary);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 64px 24px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-brand">
+          <div class="sidebar-brand-icon"><i class="ph-bold ph-translate"></i></div>
+          Lingua
+        </a>
+      </div>
+      <div class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-translate"></i> Translator</a>
+        <a href="conversation.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-users-three"></i> Conversation Mode <span class="badge badge-primary">New</span></a>
+        <a href="practice.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-cards"></i> Practice Lab <span class="badge badge-cyan">AI</span></a>
+        <button class="nav-item active"><i class="ph-duotone ph-book-open-text"></i> My Vocabulary</button>
+        <a href="history.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-clock-counter-clockwise"></i> History</a>
+      </div>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar" id="user-avatar"><i class="ph-bold ph-user"></i></div>
+          <div class="user-info">
+            <div class="user-name" id="user-name">User</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted)">Free Plan</div>
+          </div>
+          <button class="user-logout" id="logout-btn" title="Sign out"><i class="ph-bold ph-sign-out"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle"><i class="ph-bold ph-list"></i></button>
+          <div style="font-weight: 600;">Interactive Vocabulary Builder 📚</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn-icon" id="theme-toggle" title="Toggle Theme"><i class="ph-bold ph-moon-stars"></i></button>
+        </div>
+      </header>
+
+      <div style="padding: 32px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h2 style="font-family: var(--font-display); margin-bottom: 8px;">My Saved Words</h2>
+            <p style="color: var(--text-secondary);">Click on any saved word to generate an AI memory trick and practice sentences.</p>
+          </div>
+          <div style="display:flex; gap: 10px;">
+            <button class="btn btn-primary btn-sm" id="practice-btn"><i class="ph-bold ph-cards"></i> Practice Set</button>
+            <button class="btn btn-secondary btn-sm" id="clear-vocab-btn"><i class="ph-bold ph-trash"></i> Clear All</button>
+          </div>
+        </div>
+
+        <div id="vocab-grid" class="vocab-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- AI Mnemonic Modal -->
+  <div class="ai-modal" id="ai-modal">
+    <div class="ai-modal-content">
+      <button class="ai-modal-close" id="modal-close"><i class="ph-bold ph-x"></i></button>
+      <h3 style="font-family: var(--font-display); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+        <i class="ph-fill ph-magic-wand" style="color: var(--primary);"></i> AI Teacher
+      </h3>
+      <div id="ai-loading" style="text-align: center; padding: 32px; color: var(--text-muted); display: none;">
+        <i class="ph ph-spinner animate-spin" style="font-size: 2rem; margin-bottom: 16px; color: var(--primary);"></i>
+        <p>Crafting the perfect memory trick...</p>
+      </div>
+      <div id="ai-result" style="display: none;">
+        <h4 style="margin-bottom: 8px; color: var(--text-secondary);">🧠 Mnemonic Trick</h4>
+        <div class="mnemonic-box" id="modal-mnemonic"></div>
+        <h4 style="margin: 24px 0 12px 0; color: var(--text-secondary);">📝 Example Sentences</h4>
+        <div class="example-list" id="modal-examples"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js?v=5"></script>
+  <script src="js/ui.js?v=5"></script>
+  <script src="js/api.js?v=5"></script>
+  <script src="js/vocabulary.js?v=5"></script>
+</body>
+</html>
