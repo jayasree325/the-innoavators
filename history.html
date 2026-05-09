@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lingua - Translation History</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/global.css?v=5">
+  <link rel="stylesheet" href="css/dashboard.css?v=5">
+  <style>
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    
+    .history-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .history-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .history-langs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(124, 58, 237, 0.1);
+      padding: 4px 12px;
+      border-radius: 12px;
+      color: var(--primary-light);
+      font-weight: 600;
+    }
+
+    .history-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .history-source, .history-target {
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+
+    .history-target {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .history-content {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    /* AI Analyze Banner */
+    .ai-analyze-banner {
+      background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(37,99,235,0.1));
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ai-analyze-content {
+      flex: 1;
+      margin-right: 24px;
+    }
+
+    .ai-insights {
+      margin-top: 16px;
+      display: none;
+      background: var(--bg-surface);
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--primary);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-brand">
+          <div class="sidebar-brand-icon"><i class="ph-bold ph-translate"></i></div>
+          Lingua
+        </a>
+      </div>
+      <div class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-translate"></i> Translator</a>
+        <a href="conversation.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-users-three"></i> Conversation Mode <span class="badge badge-primary">New</span></a>
+        <a href="practice.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-cards"></i> Practice Lab <span class="badge badge-cyan">AI</span></a>
+        <a href="vocabulary.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-book-open-text"></i> My Vocabulary</a>
+        <button class="nav-item active"><i class="ph-duotone ph-clock-counter-clockwise"></i> History</button>
+      </div>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar" id="user-avatar"><i class="ph-bold ph-user"></i></div>
+          <div class="user-info">
+            <div class="user-name" id="user-name">User</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted)">Free Plan</div>
+          </div>
+          <button class="user-logout" id="logout-btn" title="Sign out"><i class="ph-bold ph-sign-out"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle"><i class="ph-bold ph-list"></i></button>
+          <div style="font-weight: 600;">Translation History 🕒</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn-icon" id="theme-toggle" title="Toggle Theme"><i class="ph-bold ph-moon-stars"></i></button>
+        </div>
+      </header>
+
+      <div style="padding: 32px; max-width: 900px; margin: 0 auto;">
+        
+        <div class="ai-analyze-banner">
+          <div class="ai-analyze-content">
+            <h3 style="font-family: var(--font-display); margin-bottom: 8px; display:flex; align-items:center; gap:8px;">
+              <i class="ph-fill ph-sparkle" style="color:var(--primary);"></i> Smart Learning Analytics
+            </h3>
+            <p style="color: var(--text-secondary);">Let AI analyze your recent translations to figure out what you are trying to learn, and suggest useful bonus phrases!</p>
+            <div id="ai-insights" class="ai-insights">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          <button class="btn btn-primary" id="analyze-btn">Analyze History ✨</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="font-family: var(--font-display);">Recent Translations</h2>
+          <button class="btn btn-secondary btn-sm" id="clear-history-btn"><i class="ph-bold ph-trash"></i> Clear All</button>
+        </div>
+
+        <div id="history-list" class="history-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/auth.js?v=5"></script>
+  <script src="js/ui.js?v=5"></script>
+  <script src="js/api.js?v=5"></script>
+  <script src="js/history.js?v=5"></script>
+</body>
+</html>
