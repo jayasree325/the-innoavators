@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lingua - Practice Lab</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="css/global.css?v=5">
+  <link rel="stylesheet" href="css/dashboard.css?v=5">
+  <style>
+    .practice-container {
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .practice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .practice-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .practice-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      min-height: 360px;
+    }
+
+    .practice-card {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-height: 260px;
+      justify-content: center;
+    }
+
+    .practice-prompt {
+      font-size: 1.45rem;
+      line-height: 1.45;
+      color: var(--text-primary);
+    }
+
+    .answer-input {
+      min-height: 96px;
+    }
+
+    .answer-box {
+      display: none;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(6, 182, 212, 0.06);
+      border: 1px solid rgba(6, 182, 212, 0.24);
+      color: var(--text-secondary);
+    }
+
+    .answer-box.active {
+      display: block;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .stat-pill {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+
+    .stat-pill strong {
+      display: block;
+      font-size: 1.3rem;
+      color: var(--text-primary);
+    }
+
+    .source-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 16px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .source-item {
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: .9rem;
+    }
+
+    @media (max-width: 900px) {
+      .practice-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .practice-header {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-brand">
+          <div class="sidebar-brand-icon"><i class="ph-bold ph-translate"></i></div>
+          Lingua
+        </a>
+      </div>
+      <div class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-translate"></i> Translator</a>
+        <a href="conversation.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-users-three"></i> Conversation Mode <span class="badge badge-primary">New</span></a>
+        <a href="practice.html" class="nav-item active" style="text-decoration:none;"><i class="ph-duotone ph-cards"></i> Practice Lab <span class="badge badge-cyan">AI</span></a>
+        <a href="vocabulary.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-book-open-text"></i> My Vocabulary</a>
+        <a href="history.html" class="nav-item" style="text-decoration:none;"><i class="ph-duotone ph-clock-counter-clockwise"></i> History</a>
+      </div>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar" id="user-avatar"><i class="ph-bold ph-user"></i></div>
+          <div class="user-info">
+            <div class="user-name" id="user-name">User</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted)">Free Plan</div>
+          </div>
+          <button class="user-logout" id="logout-btn" title="Sign out"><i class="ph-bold ph-sign-out"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle"><i class="ph-bold ph-list"></i></button>
+          <div style="font-weight: 600;">Practice Lab</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-secondary btn-sm" id="rebuild-local-btn"><i class="ph-bold ph-arrows-clockwise"></i> Rebuild</button>
+          <button class="btn btn-primary btn-sm" id="ai-drill-btn"><i class="ph-bold ph-sparkle"></i> AI Drill</button>
+          <button class="btn-icon" id="theme-toggle" title="Toggle Theme"><i class="ph-bold ph-moon-stars"></i></button>
+        </div>
+      </header>
+
+      <div class="practice-container">
+        <div class="practice-header">
+          <div>
+            <h2 style="font-family: var(--font-display); margin-bottom: 8px;">Personal Practice</h2>
+            <p>Review saved words, recent translations, and conversation transcripts with quick answer-and-reveal drills.</p>
+          </div>
+          <span class="badge badge-info" id="deck-status">Ready</span>
+        </div>
+
+        <div class="practice-grid">
+          <section class="practice-panel">
+            <div class="practice-card">
+              <div class="badge badge-cyan" id="card-count">Card 0 / 0</div>
+              <div class="practice-prompt" id="practice-prompt">Save vocabulary or make a translation to start practicing.</div>
+              <textarea class="answer-input" id="answer-input" placeholder="Type your answer here..."></textarea>
+              <div class="answer-box" id="answer-box"></div>
+              <div style="display:flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-secondary" id="show-answer-btn"><i class="ph-bold ph-eye"></i> Show Answer</button>
+                <button class="btn btn-primary" id="next-card-btn"><i class="ph-bold ph-arrow-right"></i> Next</button>
+              </div>
+            </div>
+          </section>
+
+          <aside class="practice-panel">
+            <div class="stat-row">
+              <div class="stat-pill"><strong id="vocab-count">0</strong><span>Words</span></div>
+              <div class="stat-pill"><strong id="history-count">0</strong><span>History</span></div>
+              <div class="stat-pill"><strong id="score-count">0</strong><span>Seen</span></div>
+            </div>
+            <h3 style="margin-bottom: 8px;">Study Sources</h3>
+            <p>Practice Lab refreshes from your live vocabulary and translation history.</p>
+            <div class="source-list" id="source-list"></div>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/auth.js?v=5"></script>
+  <script src="js/ui.js?v=5"></script>
+  <script src="js/api.js?v=5"></script>
+  <script src="js/practice.js?v=5"></script>
+</body>
+</html>
